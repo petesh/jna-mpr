@@ -1,2 +1,4 @@
 jna.jar
 jna-platform.jar
+*~
+*.class
