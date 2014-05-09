@@ -1,3 +1,4 @@
+import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
 
@@ -31,5 +32,16 @@ public class NETRESOURCEW extends Structure
   protected java.util.List getFieldOrder()
   {
     return fieldOrder;
+  }
+
+  public NETRESOURCEW(Pointer mem)
+  {
+	  super(mem);
+	  read();
+  }
+
+  public NETRESOURCEW()
+  {
+	  super();
   }
 }

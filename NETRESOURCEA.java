@@ -1,3 +1,4 @@
+import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
 /**
@@ -30,5 +31,16 @@ public class NETRESOURCEA extends Structure
   protected java.util.List getFieldOrder()
   {
     return fieldOrder;
+  }
+
+  public NETRESOURCEA(Pointer mem)
+  {
+	  super(mem);
+	  read();
+  }
+
+  public NETRESOURCEA()
+  {
+	  super();
   }
 }
