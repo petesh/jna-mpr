@@ -35,12 +35,12 @@ public class NETRESOURCEA extends Structure
 
   public NETRESOURCEA(Pointer mem)
   {
-	  super(mem);
-	  read();
+      super(mem);
+      read();
   }
 
   public NETRESOURCEA()
   {
-	  super();
+      super();
   }
 }

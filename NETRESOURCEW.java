@@ -36,12 +36,12 @@ public class NETRESOURCEW extends Structure
 
   public NETRESOURCEW(Pointer mem)
   {
-	  super(mem);
-	  read();
+      super(mem);
+      read();
   }
 
   public NETRESOURCEW()
   {
-	  super();
+      super();
   }
 }
