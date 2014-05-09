@@ -1,11 +1,14 @@
+import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.WinNT;
+import com.sun.jna.platform.win32.WinDef;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.W32APIOptions;
 import com.sun.jna.WString;
 
 public interface Mpr extends WinNT
 {
-	Mpr INSTANCE = (Mpr)Native.loadLibrary("Mpr", Mpr.class, W32APIOptions.UNICODE_OPTIONS);
+    Mpr INSTANCE = (Mpr)Native.loadLibrary("Mpr", Mpr.class, W32APIOptions.UNICODE_OPTIONS);
 
     public static final int CONNECT_UPDATE_PROFILE = 0x00000001;
     public static final int CONNECT_UPDATE_RECENT  = 0x00000002;
@@ -28,4 +31,12 @@ public interface Mpr extends WinNT
 
     public int WNetCancelConnection2A(String lpName, int dwFlags, int FORCE);
     public int WNetCancelConnection2W(WString lpName, int dwFlags, int FORCE);
+
+    public int WNetOpenEnumA(int dwScope, int dwType, int dwUsage, NETRESOURCEA lpNetResource, WinNT.HANDLEByReference handle);
+    public int WNetOpenEnumW(int dwScope, int dwType, int dwUsage, NETRESOURCEW lpNetResource, WinNT.HANDLEByReference handle);
+
+    public int WNetEnumResourceA(HANDLE handle, IntByReference lpcCount, Memory lpBuffer, IntByReference lpcBufferSize);
+    public int WNetEnumResourceW(HANDLE handle, IntByReference lpcCount, Memory lpBuffer, IntByReference lpcBufferSize);
+
+    public int WNetCloseEnum(HANDLE handle);
 }

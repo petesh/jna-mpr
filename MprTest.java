@@ -1,3 +1,8 @@
+import com.sun.jna.Memory;
+import com.sun.jna.platform.win32.WinNT;
+import com.sun.jna.platform.win32.WinDef;
+import com.sun.jna.platform.win32.WinError;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.WString;
 
 public class MprTest
@@ -5,7 +10,7 @@ public class MprTest
 
   public static final String username = "username";
   public static final String password = "password";
-  public static final String remotename = "\\\\server\\Documents";
+  public static final String remotename = "\\\\serv5\\Documents";
 
   public static void testA() {
     NETRESOURCEA lpNetResource;
@@ -33,12 +38,12 @@ public class MprTest
 
     System.out.println("Mounting Windows Share: " + errorCode);
 
-	if (errorCode == 0) {
-    	System.out.println("Cancelling connection: " + lpNetResource.lpRemoteName);
-		errorCode = Mpr.INSTANCE.WNetCancelConnection2A(lpNetResource.lpRemoteName, 0, 1);
-    	System.out.println("Cancelling Error Code: " + errorCode);
+    if (errorCode == 0) {
+        System.out.println("Cancelling connection: " + lpNetResource.lpRemoteName);
+        errorCode = Mpr.INSTANCE.WNetCancelConnection2A(lpNetResource.lpRemoteName, 0, 1);
+        System.out.println("Cancelling Error Code: " + errorCode);
 
-	}
+    }
   }
 
   public static void testW() {
@@ -67,18 +72,50 @@ public class MprTest
 
     System.out.println("Mounting Windows Share: " + errorCode);
 
-	if (errorCode == 0) {
-    	System.out.println("Cancelling connection: " + lpNetResource.lpRemoteName);
-		errorCode = Mpr.INSTANCE.WNetCancelConnection2W(lpNetResource.lpRemoteName, 0, 1);
-    	System.out.println("Cancelling Error Code: " + errorCode);
+    if (errorCode == 0) {
+        System.out.println("Cancelling connection: " + lpNetResource.lpRemoteName);
+        errorCode = Mpr.INSTANCE.WNetCancelConnection2W(lpNetResource.lpRemoteName, 0, 1);
+        System.out.println("Cancelling Error Code: " + errorCode);
 
-	}
+    }
+  }
+
+  public static void testEnumW()
+  {
+      WinNT.HANDLEByReference hbr = new WinNT.HANDLEByReference();
+      NETRESOURCEW lpNetResource = new NETRESOURCEW();
+      IntByReference rCount = new IntByReference();
+      IntByReference rBufSize = new IntByReference();
+
+      int bufSize = 128 * 1024;
+
+      Memory mem = new Memory(bufSize);
+
+      rCount.setValue(-1);
+      rBufSize.setValue(bufSize);
+
+      int errorCode = Mpr.INSTANCE.WNetOpenEnumW(NETRESOURCE.RESOURCE_CONNECTED, NETRESOURCE.RESOURCETYPE_ANY, 0, lpNetResource, hbr);
+      System.out.println(errorCode);
+      errorCode = Mpr.INSTANCE.WNetEnumResourceW(hbr.getValue(), rCount, mem, rBufSize);
+      if (errorCode != WinError.NO_ERROR)
+          if (errorCode != WinError.ERROR_NO_MORE_ITEMS)
+              System.out.println(errorCode);
+      int count = rCount.getValue();
+      System.out.println(count);
+      if (count > 0) {
+          NETRESOURCEW item = new NETRESOURCEW(mem);
+          NETRESOURCEW[] items = (NETRESOURCEW[])item.toArray(count);
+        for (NETRESOURCEW x : items) {
+            System.out.println(x.lpRemoteName);
+        }
+      }
+      Mpr.INSTANCE.WNetCloseEnum(hbr.getValue());
   }
 
   public static void main(String args[]) throws Exception
   {
-	//testA();
-	testW();
-
+    //testA();
+    //testW();
+    testEnumW();
   } 
 }
