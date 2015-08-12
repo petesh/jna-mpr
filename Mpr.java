@@ -5,6 +5,7 @@ import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.W32APIOptions;
 import com.sun.jna.WString;
+import com.sun.jna.LastErrorException;
 
 public interface Mpr extends WinNT
 {
@@ -26,17 +27,17 @@ public interface Mpr extends WinNT
     public static final int CONNECT_CMD_SAVECRED   = 0x00001000;
     public static final int CONNECT_CRED_RESET     = 0x00002000;
 
-    public int WNetAddConnection2A(NETRESOURCEA lpNetResource, String lpPassword, String lpUserName, int dwFlags);
-    public int WNetAddConnection2W(NETRESOURCEW lpNetResource, WString lpPassword, WString lpUserName, int dwFlags);
+    public int WNetAddConnection2A(NETRESOURCEA lpNetResource, String lpPassword, String lpUserName, int dwFlags) throws LastErrorException;
+    public int WNetAddConnection2W(NETRESOURCEW lpNetResource, WString lpPassword, WString lpUserName, int dwFlags) throws LastErrorException;
 
-    public int WNetCancelConnection2A(String lpName, int dwFlags, int FORCE);
-    public int WNetCancelConnection2W(WString lpName, int dwFlags, int FORCE);
+    public int WNetCancelConnection2A(String lpName, int dwFlags, int FORCE) throws LastErrorException;
+    public int WNetCancelConnection2W(WString lpName, int dwFlags, int FORCE) throws LastErrorException;
 
-    public int WNetOpenEnumA(int dwScope, int dwType, int dwUsage, NETRESOURCEA lpNetResource, WinNT.HANDLEByReference handle);
-    public int WNetOpenEnumW(int dwScope, int dwType, int dwUsage, NETRESOURCEW lpNetResource, WinNT.HANDLEByReference handle);
+    public int WNetOpenEnumA(int dwScope, int dwType, int dwUsage, NETRESOURCEA lpNetResource, WinNT.HANDLEByReference handle) throws LastErrorException;
+    public int WNetOpenEnumW(int dwScope, int dwType, int dwUsage, NETRESOURCEW lpNetResource, WinNT.HANDLEByReference handle) throws LastErrorException;
 
-    public int WNetEnumResourceA(HANDLE handle, IntByReference lpcCount, Memory lpBuffer, IntByReference lpcBufferSize);
-    public int WNetEnumResourceW(HANDLE handle, IntByReference lpcCount, Memory lpBuffer, IntByReference lpcBufferSize);
+    public int WNetEnumResourceA(HANDLE handle, IntByReference lpcCount, Memory lpBuffer, IntByReference lpcBufferSize) throws LastErrorException;
+    public int WNetEnumResourceW(HANDLE handle, IntByReference lpcCount, Memory lpBuffer, IntByReference lpcBufferSize) throws LastErrorException;
 
-    public int WNetCloseEnum(HANDLE handle);
+    public int WNetCloseEnum(HANDLE handle) throws LastErrorException;
 }
